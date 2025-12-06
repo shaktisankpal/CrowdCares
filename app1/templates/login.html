@@ -1,0 +1,217 @@
+{% extends "layout.html" %}
+{% block title %}Login - CrowdCares{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    /* Using same color variables as index.html */
+    --primary-color: #6e45e2;
+    --primary-light: #9d7aff;
+    --secondary-color: #88d3ce;
+    --secondary-light: #b0e8e4;
+    --accent-color: #ff7e5f;
+    --accent-light: #ff9e88;
+    --dark-color: #1a1a2e;
+    --light-color: #f8f9fa;
+    --bg-color: #f5f7ff;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-radius: 24px;
+    --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
+    --transition-speed: 0.5s;
+  }
+
+  .login-container {
+    background: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .login-card {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all var(--transition-speed) ease;
+    animation: fadeInUp 1s ease;
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  }
+
+  .login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .brand-text {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  .login-title {
+    font-weight: 800;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .form-control {
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) ease;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.2);
+    outline: none;
+  }
+
+  .btn-login {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem;
+    font-weight: 700;
+    transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: 100%;
+    margin: 1.5rem 0;
+    box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3);
+  }
+
+  .btn-login:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(255, 126, 95, 0.4);
+  }
+
+  .btn-register {
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    border-radius: 50px;
+    padding: 0.8rem;
+    transition: all var(--transition-speed) ease;
+    width: 100%;
+    font-weight: 600;
+  }
+
+  .btn-register:hover {
+    background: rgba(110, 69, 226, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+  }
+
+  .form-check-input {
+    margin-right: 0.5rem;
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  .form-check-label {
+    color: var(--dark-color);
+    font-size: 0.95rem;
+  }
+
+  .copyright {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .login-card {
+      padding: 2rem;
+    }
+    .brand-text {
+      font-size: 2rem;
+    }
+    .login-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+  <div class="login-card">
+    <div class="text-center">
+      <h1 class="brand-text">CrowdCares</h1>
+      <h2 class="login-title">Please sign in</h2>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %}">
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="email" class="form-control" name="username" id="email" placeholder="Email address" required>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+        <label class="form-check-label" for="rememberMe">Remember me</label>
+      </div>
+      <button type="submit" class="btn btn-login">Sign in</button>
+      <div class="text-center">
+        <a href="{% url 'register' %}" class="btn btn-register">Don't Have An Account?</a>
+      </div>
+    </form>
+    <p class="copyright">© 2025 CrowdCares | Empowering Ideas, Changing Lives</p>
+  </div>
+</div>
+{% endblock %}

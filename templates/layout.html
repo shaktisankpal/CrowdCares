@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>{% block title %} CrowdCares {% endblock %}</title>
+  <style>
+    :root {
+      /* Updated to match index.html theme */
+      --primary-color: #6e45e2;
+      --secondary-color: #88d3ce;
+      --accent-color: #ff7e5f;
+      --dark-color: #1a1a2e;
+      --light-color: #f8f9fa;
+      --success-color: #4cc9f0;
+      --transition-speed: 0.4s; /* Match index.html */
+      --section-padding: 5rem 0;
+      --card-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+      --card-shadow-hover: 0 20px 30px -10px rgba(0, 0, 0, 0.3);
+      --max-content-width: 1400px;
+      --glow-effect: 0 0 15px rgba(110, 69, 226, 0.5); /* Match index.html */
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      overflow-x: hidden;
+      background-color: #f5f7fa;
+    }
+
+    /* Navbar Styles - Enhanced Design */
+    .navbar {
+      padding: 1rem 0; /* Slightly more padding for a premium look */
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+      box-shadow: 0 5px 25px rgba(110, 69, 226, 0.3); /* Stronger shadow with theme color */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 3px solid var(--accent-color); /* Accent border */
+    }
+
+    .navbar-brand {
+      font-weight: 800; /* Bolder for emphasis */
+      font-size: 1.8rem; /* Larger for prominence */
+      background: linear-gradient(90deg, #fff, #e0e0e0); /* Gradient text like footer logo */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0.5rem 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+      transition: all var(--transition-speed) ease;
+    }
+
+    .navbar-brand:hover {
+      transform: scale(1.05); /* Slight scale on hover */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Glow effect */
+    }
+
+    .navbar-nav {
+      align-items: center;
+    }
+
+    .navbar-nav .nav-item {
+      display: flex;
+      align-items: center;
+      position: relative; /* For hover effects */
+    }
+
+    .navbar-nav .nav-link {
+      font-weight: 600; /* Bolder for readability */
+      padding: 0.5rem 1.2rem;
+      margin: 0 0.5rem;
+      color: white !important; /* White text to contrast with gradient background */
+      transition: all var(--transition-speed) ease;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      border-radius: 25px; /* Rounded edges */
+      text-transform: uppercase; /* Match button style in index.html */
+      font-size: 0.9rem; /* Match button font size */
+      letter-spacing: 0.5px; /* Match button spacing */
+    }
+
+    .navbar-nav .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1); /* Subtle background on hover */
+      transform: translateY(-2px); /* Lift effect */
+      box-shadow: 0 5px 15px rgba(255, 126, 95, 0.3); /* Glow with accent color */
+    }
+
+    .navbar-nav .nav-link.active {
+      background: linear-gradient(135deg, var(--accent-color), #ff9a5f); /* Gradient for active link */
+      color: white !important;
+      font-weight: 700;
+    }
+
+    /* Premium Button Design for Start Fundraising */
+    .btn-nav-primary {
+      background: linear-gradient(135deg, var(--accent-color), #ff9a5f); /* Match index.html button style */
+      color: white !important;
+      border-radius: 50px;
+      padding: 0.75rem 2rem !important; /* Larger padding for prominence */
+      font-weight: 600;
+      transition: all var(--transition-speed) ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 40px;
+      text-transform: uppercase; /* Match index.html buttons */
+      font-size: 0.9rem; /* Match index.html buttons */
+      letter-spacing: 0.5px; /* Match index.html buttons */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-nav-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: all 0.6s ease;
+    }
+
+    .btn-nav-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-nav-primary:hover {
+      transform: translateY(-3px); /* Lift effect */
+      box-shadow: 0 10px 25px rgba(255, 126, 95, 0.4); /* Stronger shadow with accent color */
+    }
+
+    .navbar-toggler {
+      border: none;
+      padding: 0.5rem;
+      color: white; /* White icon to match theme */
+    }
+
+    .navbar-toggler i {
+      font-size: 1.5rem; /* Larger icon */
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+
+    /* Full-width container */
+    .container-full {
+      width: 100%;
+      max-width: var(--max-content-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; /* Ensure horizontal alignment */
+      align-items: center; /* Vertically center items */
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Main content container */
+    .main-content {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .navbar-nav .nav-item {
+        padding: 0.5rem 0;
+      }
+      
+      .btn-nav-primary {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        width: 100%; /* Full width on mobile */
+        justify-content: center;
+      }
+
+      .navbar-nav .nav-link {
+        justify-content: center; /* Center links on mobile */
+      }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-full">
+      <a class="navbar-brand navbar-brand-link" href="/home">CrowdCares</a> <!-- Updated href to /home -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active home-link" href="/home#">Home</a> <!-- Updated href to /home -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link discover-link" href="/home#featured-projects">Discover</a> <!-- Updated href to /home -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link how-it-works-link" href="/home#how-it-works">How It Works</a> <!-- Updated href to /home -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link about-link" href="/home#footer">About</a> <!-- Updated href to /home -->
+          </li>
+          <li class="nav-item ms-lg-3">
+            <a class="btn btn-nav-primary start-fundraising" href="/login">Start Fundraising</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom Script to Handle Navbar Links -->
+  <!-- Custom Script to Handle Navbar Links -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Function to normalize paths (remove trailing slashes, etc.)
+    const normalizePath = (path) => {
+      return path.replace(/\/+$/, ''); // Remove trailing slashes
+    };
+
+    // Function to handle smooth scrolling on the same page
+    const scrollToSection = (sectionId) => {
+      const section = document.querySelector(sectionId);
+      if (section) {
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        // Update the URL hash without reloading the page
+        history.pushState(null, null, sectionId);
+      }
+    };
+
+    // Function to handle navigation links
+    const handleNavLink = (selector, sectionId) => {
+      const link = document.querySelector(selector);
+      if (link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevent default navigation behavior
+
+          const currentPath = normalizePath(window.location.pathname); // e.g., "/home"
+          const targetPath = normalizePath(link.getAttribute('href').split('#')[0]); // e.g., "/home"
+          const targetSection = link.getAttribute('href').split('#')[1]; // e.g., "featured-projects"
+
+          // Debugging: Log the paths to see what's being compared
+          console.log('Current Path:', currentPath);
+          console.log('Target Path:', targetPath);
+          console.log('Target Section:', targetSection);
+
+          // Check if we're on the home page
+          // Allow for both "/home" and "/" (in case "/" redirects to "/home" in Django)
+          const isHomePage = (currentPath === '/home' || currentPath === '' || currentPath === '/');
+          const isTargetHomePage = (targetPath === '/home' || targetPath === '' || targetPath === '/');
+
+          if (isHomePage && isTargetHomePage) {
+            // If on the home page and targeting the home page, scroll to the section
+            if (targetSection) {
+              console.log('Scrolling to section:', `#${targetSection}`);
+              scrollToSection(`#${targetSection}`);
+            } else {
+              // If no section (e.g., Home link), scroll to top
+              console.log('Scrolling to top');
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              });
+              // Update the URL to remove any hash
+              history.pushState(null, null, '/home');
+            }
+          } else {
+            // If on a different page or targeting a different page, redirect
+            console.log('Redirecting to:', link.getAttribute('href'));
+            window.location.href = link.getAttribute('href');
+          }
+        });
+      }
+    };
+
+    // Handle Navbar Brand link (always go to home page top)
+    handleNavLink('.navbar-brand-link', '');
+
+    // Handle Home link
+    handleNavLink('.home-link', '');
+
+    // Handle Discover link
+    handleNavLink('.discover-link', '#featured-projects');
+
+    // Handle How It Works link
+    handleNavLink('.how-it-works-link', '#how-it-works');
+
+    // Handle About link (assuming footer has id="footer")
+    handleNavLink('.about-link', '#footer');
+
+    // Handle Start Fundraising link (no smooth scrolling, just redirect)
+    const startFundraisingLink = document.querySelector('.start-fundraising');
+    if (startFundraisingLink) {
+      startFundraisingLink.addEventListener('click', function(e) {
+        // Let the default navigation happen (redirect to /login)
+        console.log('Redirecting to /login');
+      });
+    }
+
+    // On page load, check if there's a hash in the URL and scroll to the section
+    const hash = window.location.hash; // e.g., "#featured-projects"
+    if (hash) {
+      console.log('Page loaded with hash, scrolling to:', hash);
+      scrollToSection(hash);
+    }
+  });
+</script>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

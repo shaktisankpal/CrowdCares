@@ -1,0 +1,502 @@
+{% extends "layout.html" %}
+{% block title %}Fundraiser Dashboard - CrowdCares{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    /* Enhanced Color Palette */
+    --primary-color: #6e45e2; /* Purple start */
+    --primary-light: #9d7aff;
+    --secondary-color: #88d3ce;
+    --secondary-light: #b0e8e4;
+    --accent-color: #ff7e5f; /* Orange end */
+    --accent-light: #ff9e88;
+    --dark-color: #1a1a2e;
+    --darker-color: #0f0f1a;
+    --light-color: #f8f9fa;
+    --lighter-color: #fefefe;
+    --bg-color: #f5f7ff;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --success-color: #4cc9f0;
+    --warning-color: #f8961e;
+    --danger-color: #f72585;
+    
+    /* Enhanced Spacing and Sizing */
+    --section-padding: 5rem 0;
+    --card-radius: 24px;
+    --card-padding: 3rem;
+    --transition-speed: 0.5s;
+    
+    /* New Shadows and Effects */
+    --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
+    --text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --glow-effect: 0 0 20px rgba(110, 69, 226, 0.6);
+    --section-shadow: 0 10px 60px rgba(0, 0, 0, 0.05);
+  }
+
+  .dashboard-container {
+    background: var(--bg-color);
+    min-height: 100vh;
+    padding: var(--section-padding);
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  .dashboard-card {
+    background: var(--card-bg);
+    padding: var(--card-padding);
+    border-radius: var(--card-radius);
+    box-shadow: var(--section-shadow);
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+  }
+
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  }
+
+  .dashboard-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .dashboard-title::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 3px;
+  }
+
+  .welcome-message {
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--dark-color);
+    margin-bottom: 3rem;
+    font-weight: 500;
+  }
+
+  .dashboard-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-weight: 700;
+    padding: 1.1rem 2.75rem;
+    border-radius: 50px;
+    transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    z-index: 1;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.8s ease;
+    z-index: -1;
+  }
+
+  .btn:hover::before {
+    left: 100%;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    box-shadow: 0 8px 20px rgba(110, 69, 226, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(110, 69, 226, 0.4);
+  }
+
+  .btn-accent {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+    color: white;
+    box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3);
+  }
+
+  .btn-accent:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(255, 126, 95, 0.4);
+  }
+
+  .projects-section {
+    margin-top: 4rem;
+  }
+
+  .section-title {
+    color: var(--primary-color);
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    font-size: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 3px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: var(--card-shadow);
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+  }
+
+  .project-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .project-card-img-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+
+  .project-card-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .project-card:hover .project-card-img {
+    transform: scale(1.1);
+  }
+
+  .project-card .card-body {
+    padding: 2rem;
+  }
+
+  .project-title {
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+  }
+
+  .project-description {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .project-amount {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+  }
+
+  .project-status {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .status-active {
+    background: rgba(76, 201, 240, 0.2);
+    color: var(--success-color);
+  }
+
+  .status-completed {
+    background: rgba(110, 69, 226, 0.2);
+    color: var(--primary-color);
+  }
+
+  .status-draft {
+    background: rgba(248, 150, 30, 0.2);
+    color: var(--warning-color);
+  }
+
+  .no-projects {
+    text-align: center;
+    color: #666;
+    padding: 4rem 2rem;
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    grid-column: 1 / -1;
+  }
+
+  .no-projects h3 {
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+  }
+
+  .no-projects p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .alert {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+    box-shadow: var(--card-shadow);
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+  }
+
+  .alert-success {
+    background-color: rgba(76, 201, 240, 0.15);
+    color: var(--dark-color);
+  }
+
+  .alert-success::before {
+    background: var(--success-color);
+  }
+
+  .alert-danger {
+    background-color: rgba(247, 37, 133, 0.15);
+    color: var(--dark-color);
+  }
+
+  .alert-danger::before {
+    background: var(--danger-color);
+  }
+
+  /* Updated Progress Bar Styles to Match Second Image */
+  .progress {
+    height: 12px; /* Match the height of the second image */
+    border-radius: 6px; /* Rounded edges */
+    margin: 1.5rem 0;
+    background-color: rgba(0, 0, 0, 0.05); /* Light gray background */
+    position: relative;
+    overflow: visible; /* Ensure rounded end is visible */
+  }
+
+  .progress-bar {
+    height: 100%;
+    max-width: 100%;
+    min-width: 2%; /* Prevent collapse at 0% */
+    background: linear-gradient(to right, #6e45e2, #ff7e5f); /* Gradient from purple to orange, matching second image */
+    border-radius: 6px; /* Apply rounded ends to the bar itself */
+    transition: width 0.3s ease;
+    position: relative;
+    display: block; /* Ensure proper rendering */
+  }
+
+  /* Removed the ::after pseudo-element to let the bar's rounded end handle the circle */
+
+  .debug-percent {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 1200px) {
+    .dashboard-title {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .projects-grid {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 3rem 1rem;
+    }
+    
+    .dashboard-card {
+      padding: 2rem;
+    }
+    
+    .dashboard-title {
+      font-size: 2.2rem;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+    }
+    
+    .dashboard-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .dashboard-title {
+      font-size: 2rem;
+    }
+    
+    .section-title {
+      font-size: 1.6rem;
+    }
+    
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .welcome-message {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <div class="dashboard-card">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <h1 class="dashboard-title">Fundraiser Dashboard</h1>
+    <p class="welcome-message">Welcome back, <strong>{{ user.username }}</strong>! Ready to make an impact?</p>
+
+    <div class="dashboard-actions">
+      <a href="{% url 'fundraiser-create-post' %}" class="btn btn-primary">Create New Project</a>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-accent">Log Out</button>
+      </form>
+    </div>
+
+    <div class="projects-section">
+      <h2 class="section-title">Your Projects</h2>
+      
+      {% if projects %}
+        <div class="projects-grid">
+          {% for project in projects %}
+            <div class="project-card">
+              <div class="project-card-img-container">
+                {% if project.image %}
+                  <img src="{{ project.image.url }}" class="project-card-img" alt="{{ project.title }}">
+                {% else %}
+                  <img src="https://i.postimg.cc/yYwp4tTD/Chat-GPT-Image-Apr-5-2025-12-45-36-PM.png" class="project-card-img" alt="Default project image">
+                {% endif %}
+              </div>
+              <div class="card-body">
+                <h3 class="project-title">{{ project.title }}</h3>
+                <p class="project-description">{{ project.description|truncatechars:120 }}</p>
+                
+                <!-- Debug the percent_funded value -->
+                <p class="debug-percent">Progress: {{ project.percent_funded|default:'0'|floatformat:2 }}%</p>
+                
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: {{ project.percent_funded|default:'0'|floatformat:2 }}%;" 
+                       aria-valuenow="{{ project.percent_funded|default:'0'|floatformat:2 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                
+                <div class="project-meta">
+                  <span class="project-amount">₹{{ project.collected_amount }} raised</span>
+                  <span class="project-status status-{{ project.status|lower }}">{{ project.get_status_display }}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="no-projects">
+          <h3>You haven't created any projects yet.</h3>
+          <p>Get started by clicking "Create New Project" above to launch your first fundraising campaign!</p>
+          <a href="{% url 'fundraiser-create-post' %}" class="btn btn-primary">Start Your First Project</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,438 @@
+{% extends "layout.html" %}
+{% block title %}Register - CrowdCares{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --primary-color: #6e45e2;
+    --primary-light: #9d7aff;
+    --secondary-color: #88d3ce;
+    --secondary-light: #b0e8e4;
+    --accent-color: #ff7e5f;
+    --accent-light: #ff9e88;
+    --dark-color: #1a1a2e;
+    --light-color: #f8f9fa;
+    --bg-color: #f5f7ff;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-radius: 24px;
+    --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
+    --transition-speed: 0.3s;
+    --success-color: #4cc9f0;
+    --danger-color: #f72585;
+  }
+
+  .register-container {
+    background: var(--bg-color);
+    min-height: 100vh;
+    padding: 4rem 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .register-card {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all var(--transition-speed) ease;
+  }
+
+  .register-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  }
+
+  .brand-text {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+
+  .register-title {
+    font-weight: 800;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="file"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed) ease;
+    font-size: 1rem;
+  }
+
+  /* Specific styling for address and bank details textareas */
+  textarea[name="address"],
+  textarea[name="bank_account_details"] {
+    min-height: 100px;
+    max-height: 150px;
+    resize: vertical;
+    border-radius: 16px;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 1em;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.2);
+    outline: none;
+  }
+
+  .btn-register {
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem;
+    font-weight: 700;
+    transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: 100%;
+    margin: 2rem 0 1rem;
+    box-shadow: 0 8px 20px rgba(255, 126, 95, 0.3);
+  }
+
+  .btn-register:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(255, 126, 95, 0.4);
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+  }
+
+  .login-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+  }
+
+  .login-link a:hover {
+    color: var(--accent-color);
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  .alert-success {
+    background-color: rgba(76, 201, 240, 0.2);
+    border-left: 4px solid var(--success-color);
+    color: var(--dark-color);
+  }
+
+  .alert-danger {
+    background-color: rgba(247, 37, 133, 0.2);
+    border-left: 4px solid var(--danger-color);
+    color: var(--dark-color);
+  }
+
+  .user-type-section {
+    background: rgba(245, 247, 255, 0.7);
+    padding: 1.5rem;
+    border-radius: var(--card-radius);
+    margin-bottom: 1.5rem;
+  }
+
+  .user-details-section {
+    padding: 1.5rem;
+    background: rgba(245, 247, 255, 0.7);
+    border-radius: var(--card-radius);
+    margin: 1.5rem 0;
+    transition: all var(--transition-speed) ease;
+    display: none;
+  }
+
+  .user-details-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  .two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .register-card {
+      padding: 2rem;
+    }
+    .brand-text {
+      font-size: 2rem;
+    }
+    .register-title {
+      font-size: 1.5rem;
+    }
+    .two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .register-container {
+      padding: 2rem 1rem;
+    }
+    .register-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+  <div class="register-card">
+    <h1 class="brand-text">CrowdCares</h1>
+    <h2 class="register-title">Create Your Account</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        <strong>Please correct the following errors:</strong>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form method="post" class="form">
+      {% csrf_token %}
+      
+      <div class="two-column">
+        <div class="form-group">
+          {{ form.username.label_tag }}
+          {{ form.username }}
+        </div>
+        <div class="form-group">
+          {{ form.email.label_tag }}
+          {{ form.email }}
+        </div>
+      </div>
+
+      <div class="two-column">
+        <div class="form-group">
+          {{ form.password1.label_tag }}
+          {{ form.password1 }}
+        </div>
+        <div class="form-group">
+          {{ form.password2.label_tag }}
+          {{ form.password2 }}
+        </div>
+      </div>
+
+      <div class="user-type-section">
+        <h4>Account Type</h4>
+        <div class="form-group">
+          {{ form.user_type.label_tag }}
+          {{ form.user_type }}
+        </div>
+      </div>
+
+      <!-- Investor Fields -->
+      <div id="investor-fields" class="user-details-section">
+        <h4>Investor Details</h4>
+        <div class="two-column">
+          <div class="form-group">
+            {{ form.full_name.label_tag }}
+            {{ form.full_name }}
+          </div>
+          <div class="form-group">
+            {{ form.phone_number.label_tag }}
+            {{ form.phone_number }}
+          </div>
+        </div>
+        <div class="two-column">
+          <div class="form-group">
+            {{ form.organization.label_tag }}
+            {{ form.organization }}
+          </div>
+          <div class="form-group">
+            {{ form.job_title.label_tag }}
+            {{ form.job_title }}
+          </div>
+        </div>
+        <div class="two-column">
+          <div class="form-group">
+            {{ form.country.label_tag }}
+            {{ form.country }}
+          </div>
+          <div class="form-group">
+            {{ form.city.label_tag }}
+            {{ form.city }}
+          </div>
+        </div>
+        <div class="form-group">
+          {{ form.govt_id.label_tag }}
+          {{ form.govt_id }}
+        </div>
+        <div class="form-group">
+          {{ form.bank_account_details.label_tag }}
+          {{ form.bank_account_details }}
+        </div>
+      </div>
+
+      <!-- Fundraiser Fields -->
+      <div id="fundraiser-fields" class="user-details-section">
+        <h4>Fundraiser Details</h4>
+        <div class="two-column">
+          <div class="form-group">
+            {{ form.full_name.label_tag }}
+            {{ form.full_name }}
+          </div>
+          <div class="form-group">
+            {{ form.phone_number.label_tag }}
+            {{ form.phone_number }}
+          </div>
+        </div>
+        <div class="form-group">
+          {{ form.govt_id.label_tag }}
+          {{ form.govt_id }}
+        </div>
+        <div class="form-group">
+          {{ form.bank_account_details.label_tag }}
+          {{ form.bank_account_details }}
+        </div>
+      </div>
+
+      <!-- NGO Fields -->
+      <div id="ngo-fields" class="user-details-section">
+        <h4>NGO Details</h4>
+        <div class="form-group">
+          {{ form.organization_name.label_tag }}
+          {{ form.organization_name }}
+        </div>
+        <div class="two-column">
+          <div class="form-group">
+            {{ form.darpan_id.label_tag }}
+            {{ form.darpan_id }}
+          </div>
+          <div class="form-group">
+            {{ form.phone_number.label_tag }}
+            {{ form.phone_number }}
+          </div>
+        </div>
+        <div class="form-group">
+          {{ form.address.label_tag }}
+          {{ form.address }}
+        </div>
+        <div class="form-group">
+          {{ form.bank_account_details.label_tag }}
+          {{ form.bank_account_details }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn-register">Create Account</button>
+    </form>
+
+    <p class="login-link">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const userTypeField = document.querySelector("[name='user_type']");
+    const investorFields = document.getElementById("investor-fields");
+    const fundraiserFields = document.getElementById("fundraiser-fields");
+    const ngoFields = document.getElementById("ngo-fields");
+
+    function toggleFields() {
+      const userType = userTypeField.value;
+
+      // Investor fields
+      const investorInputs = investorFields.querySelectorAll('input, select, textarea');
+      investorInputs.forEach(input => {
+        input.disabled = (userType !== "investor");
+      });
+      investorFields.style.display = userType === "investor" ? "block" : "none";
+
+      // Fundraiser fields
+      const fundraiserInputs = fundraiserFields.querySelectorAll('input, select, textarea');
+      fundraiserInputs.forEach(input => {
+        input.disabled = (userType !== "fundraiser");
+      });
+      fundraiserFields.style.display = userType === "fundraiser" ? "block" : "none";
+
+      // NGO fields
+      const ngoInputs = ngoFields.querySelectorAll('input, select, textarea');
+      ngoInputs.forEach(input => {
+        input.disabled = (userType !== "ngo");
+      });
+      ngoFields.style.display = userType === "ngo" ? "block" : "none";
+    }
+
+    userTypeField.addEventListener("change", toggleFields);
+    toggleFields();
+  });
+</script>
+{% endblock %}

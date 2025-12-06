@@ -1,0 +1,420 @@
+{% extends "layout.html" %}
+{% block title %}{{ project.title }} - CrowdCares{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    /* Color Palette */
+    --primary-color: #6e45e2;
+    --primary-light: #9d7aff;
+    --secondary-color: #88d3ce;
+    --secondary-light: #b0e8e4;
+    --accent-color: #ff7e5f;
+    --accent-light: #ff9e88;
+    --success-color: #28a745;
+    --success-light: #34d058;
+    --dark-color: #1a1a2e;
+    --light-color: #f8f9fa;
+    --bg-color: #f5f7ff;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    
+    /* Spacing and Sizing */
+    --section-padding: 3rem;
+    --card-radius: 24px;
+    --transition-speed: 0.3s;
+    
+    /* Shadows */
+    --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.12);
+  }
+
+  .project-container {
+    background: var(--bg-color);
+    min-height: 100vh;
+    padding: var(--section-padding);
+    display: flex;
+    justify-content: center;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  }
+
+  .project-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem; /* Adjusted margin */
+    color: var(--dark-color);
+    position: relative;
+  }
+
+  .project-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
+  }
+
+  .project-creator {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  .project-description {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(245, 247, 255, 0.5);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-light);
+  }
+
+  .project-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .meta-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-speed) ease;
+  }
+
+  .meta-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .meta-title {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .meta-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+  }
+
+  .progress-container {
+    margin: 2rem 0;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+  }
+
+  .progress {
+    height: 12px;
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .media-links {
+    margin: 2rem 0;
+  }
+
+  .media-links h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .media-links p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+
+  .media-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+
+  .media-links a:hover {
+    text-decoration: underline;
+  }
+
+  .investment-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    transition: all var(--transition-speed) ease;
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(110, 69, 226, 0.2);
+    outline: none;
+  }
+
+  .btn {
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    transition: all var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-invest {
+    background: linear-gradient(135deg, var(--success-color), var(--success-light));
+    color: white;
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+  }
+
+  .btn-invest:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
+  }
+
+  .messages {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+  }
+
+  .messages li {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .messages li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+  }
+
+  .messages .success {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: var(--dark-color);
+  }
+
+  .messages .success::before {
+    background: var(--success-color);
+  }
+
+  .messages .error {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: var(--dark-color);
+  }
+
+  .messages .error::before {
+    background: #dc3545;
+  }
+
+  .funding-complete {
+    background: rgba(76, 201, 240, 0.15);
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    margin-top: 2rem;
+    border-left: 4px solid var(--success-color);
+  }
+
+  .funding-complete h3 {
+    color: var(--success-color);
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .project-card {
+      padding: 2rem;
+    }
+    .project-title {
+      font-size: 2rem;
+    }
+    .project-meta {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .project-container {
+      padding: 1.5rem;
+    }
+    .project-card {
+      padding: 1.5rem;
+    }
+    .project-title {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="project-container">
+  <div class="project-card">
+    <h1 class="project-title">{{ project.title }}</h1>
+    <p class="project-creator">Created by: {{ creator_name }}</p>
+    
+    <div class="project-description">
+      {{ project.description }}
+    </div>
+
+    <div class="project-meta">
+      <div class="meta-card">
+        <div class="meta-title">Goal Amount</div>
+        <div class="meta-value">₹{{ project.goal_amount|floatformat:2 }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-title">Collected Amount</div>
+        <div class="meta-value">₹{{ project.collected_amount|floatformat:2 }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-title">Remaining Needed</div>
+        <div class="meta-value">₹{{ remaining_amount|floatformat:2 }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-title">Funding Period</div>
+        <div class="meta-value">{{ project.start_date }} to {{ project.end_date }}</div>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-info">
+        <span>Raised: ₹{{ project.collected_amount|floatformat:2 }}</span>
+        <span>{{ project.percent_funded|floatformat:2 }}%</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" 
+             role="progressbar" 
+             style="width: {{ project.percent_funded|floatformat:2 }}%;" 
+             aria-valuenow="{{ project.percent_funded|floatformat:2 }}" 
+             aria-valuemin="0" 
+             aria-valuemax="100">
+        </div>
+      </div>
+    </div>
+
+    <div class="media-links">
+      <h3>Media Links</h3>
+      {% if project.story_media_link %}
+        <p><a href="{{ project.story_media_link }}" target="_blank">View Story Media</a></p>
+      {% else %}
+        <p>No story media available.</p>
+      {% endif %}
+      {% if project.social_media_links %}
+        <p><strong>Social Media:</strong> 
+          {% for link in project.social_media_links.split %}
+            <a href="{{ link }}" target="_blank">{{ link }}</a><br>
+          {% endfor %}
+        </p>
+      {% else %}
+        <p>No social media links available.</p>
+      {% endif %}
+    </div>
+
+    {% if remaining_amount > 0 %}
+      <div class="investment-form">
+        <form method="post" action="{% url 'invest' project.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="amount">Amount to Invest (₹)</label>
+            <input type="number" name="amount" id="amount" step="0.01" min="0.01" max="{{ remaining_amount|floatformat:2 }}" 
+                   required class="form-control" placeholder="Enter amount">
+          </div>
+          <button type="submit" class="btn btn-invest">Invest Now</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="funding-complete">
+        <h3>Funding Goal Reached!</h3>
+        <p>This project has successfully reached its funding target. Thank you to all our supporters!</p>
+      </div>
+    {% endif %}
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

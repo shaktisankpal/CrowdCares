@@ -1,0 +1,323 @@
+<!-- templates/ngoCreatePost.html -->
+{% extends "layout.html" %}
+{% block title %}Create New Fundraising Project - CrowdCares{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Page Background */
+  body {
+    background: linear-gradient(to right, #e6e6fa, #f0f0ff);
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  /* Form Container */
+  .form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid;
+    border-image: linear-gradient(to right, #6B46C1, #E53E3E) 1;
+  }
+
+  /* Headings */
+  h1 {
+    color: #6B46C1;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #6B46C1;
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  .section h3 {
+    color: #6B46C1;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .underline {
+    width: 100%;
+    height: 2px;
+    background: #E53E3E;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    color: #2D3748;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: #FFFFFF;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #A0AEC0;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #6B46C1;
+    outline: none;
+  }
+
+  /* Error List */
+  .errorlist {
+    color: #E53E3E;
+    list-style: none;
+    margin-top: 0.5rem;
+    padding: 0;
+  }
+
+  /* Specific Field Widths */
+  #id_target_amount {
+    max-width: 250px;
+  }
+
+  #id_min_contribution {
+    max-width: 350px;
+  }
+
+  #id_social_media_links {
+    max-width: 450px;
+  }
+
+  /* Date Fields */
+  .date-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .date-field {
+    width: 48%;
+  }
+
+  .date-field label {
+    color: #2D3748;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .date-input {
+    position: relative;
+  }
+
+  .date-input input {
+    width: 100%;
+    padding: 0.8rem;
+    padding-right: 2.5rem; /* Space for icon */
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+  }
+
+  .calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6B46C1;
+    font-size: 1.2rem;
+  }
+
+  /* Submit Button */
+  .btn-submit {
+    background: #6B46C1;
+    color: #FFFFFF;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    margin: 2rem auto 0;
+    transition: background 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background: #5439A8;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h1>CrowdCares</h1>
+  <h2>Create a New Fundraising Project</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Basic Information -->
+    <div class="section">
+      <h3>Basic Information</h3>
+      <div class="underline"></div>
+      <div class="form-group">
+        <label for="{{ form.title.id_for_label }}">Title</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+          <ul class="errorlist">
+            {% for error in form.title.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.category.id_for_label }}">Category</label>
+        {{ form.category }}
+        {% if form.category.errors %}
+          <ul class="errorlist">
+            {% for error in form.category.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <ul class="errorlist">
+            {% for error in form.description.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.beneficiaries.id_for_label }}">Beneficiaries</label>
+        {{ form.beneficiaries }}
+        {% if form.beneficiaries.errors %}
+          <ul class="errorlist">
+            {% for error in form.beneficiaries.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Financial Details -->
+    <div class="section">
+      <h3>Financial Details</h3>
+      <div class="underline"></div>
+      <div class="form-group">
+        <label for="{{ form.target_amount.id_for_label }}">Goal Amount (₹)</label>
+        {{ form.target_amount }}
+        {% if form.target_amount.errors %}
+          <ul class="errorlist">
+            {% for error in form.target_amount.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.min_contribution.id_for_label }}">Minimum Contribution (₹)</label>
+        {{ form.min_contribution }}
+        {% if form.min_contribution.errors %}
+          <ul class="errorlist">
+            {% for error in form.min_contribution.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Funding Period -->
+    <div class="section">
+      <h3>Funding Period</h3>
+      <div class="underline"></div>
+      <div class="date-group">
+        <div class="date-field">
+          <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+          <div class="date-input">
+            {{ form.start_date }}
+            <span class="calendar-icon">📅</span>
+          </div>
+          {% if form.start_date.errors %}
+            <ul class="errorlist">
+              {% for error in form.start_date.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="date-field">
+          <label for="{{ form.end_date.id_for_label }}">End Date</label>
+          <div class="date-input">
+            {{ form.end_date }}
+            <span class="calendar-icon">📅</span>
+          </div>
+          {% if form.end_date.errors %}
+            <ul class="errorlist">
+              {% for error in form.end_date.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Media Links -->
+    <div class="section">
+      <h3>Media Links</h3>
+      <div class="underline"></div>
+      <div class="form-group">
+        <label for="{{ form.supporting_documents.id_for_label }}">Supporting Documents</label>
+        {{ form.supporting_documents }}
+        {% if form.supporting_documents.errors %}
+          <ul class="errorlist">
+            {% for error in form.supporting_documents.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.social_media_links.id_for_label }}">Social Media Links</label>
+        {{ form.social_media_links }}
+        {% if form.social_media_links.errors %}
+          <ul class="errorlist">
+            {% for error in form.social_media_links.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+    
+    <button type="submit" class="btn-submit">Submit Project</button>
+  </form>
+</div>
+{% endblock %}
